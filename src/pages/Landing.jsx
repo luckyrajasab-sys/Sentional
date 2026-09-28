@@ -1,0 +1,26 @@
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { Shield, Smile, TrendingUp, Share2, ShieldAlert, Bot, Link2, ArrowRight } from 'lucide-react'
+import { ResponsiveContainer, AreaChart, Area } from 'recharts'
+import { timeline, threats } from '../data'
+const feats=[[Smile,'Sentiment Intelligence','Aggregate opinion across platforms.','87.2% positive'],[TrendingUp,'Trend Detection','Spot emerging narratives early.','38 trends'],[Share2,'Network Analysis','Map influence and communities.','214 links'],[ShieldAlert,'Threat Detection','Risk signals with AI confidence.','26 signals'],[Bot,'Bot Intelligence','Explainable account risk scoring.','142 flagged'],[Link2,'Blockchain Provenance','Tamper-evident evidence trail.','SHA-256']]
+const flow=['Social Data','Data Processing','AI / ML Analysis','Network Intelligence','Threat Detection','Blockchain Evidence','Actionable Insights']
+const stats=[['12.4K','Posts analyzed'],['87.2%','Positive sentiment'],['142','Suspicious accounts'],['38','Emerging trends'],['26','Threat signals']]
+export default function Landing(){return(<div>
+<header className="flex justify-between items-center px-6 h-16 border-b border-line"><span className="flex items-center gap-2 font-semibold"><Shield className="text-accent" size={20}/>Sentinel</span><nav className="flex gap-5 text-sm text-muted items-center"><Link to="/about">About</Link><Link to="/login">Sign in</Link><Link className="btn" to="/dashboard">Dashboard</Link></nav></header>
+<section className="max-w-6xl mx-auto px-6 pt-20 pb-10 text-center"><motion.h1 initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} className="text-4xl sm:text-6xl font-semibold tracking-tight">Understand the Conversation.<br/><span className="text-accent">Detect the Threat.</span></motion.h1>
+<p className="text-muted max-w-2xl mx-auto mt-6">An AI-driven social media intelligence platform that transforms public social signals into actionable insights for security, trend and network analysis.</p>
+<div className="flex gap-3 justify-center mt-8"><Link className="btn" to="/dashboard">Explore Platform<ArrowRight size={14}/></Link><Link className="btn-ghost" to="/threats">View Intelligence</Link></div>
+<p className="label mt-6">AI Analytics - Network Intelligence - Blockchain Evidence</p>
+<div className="card mt-12 p-4 text-left grid md:grid-cols-3 gap-3 shadow-2xl shadow-cyan-500/5"><div className="md:col-span-2 h-56"><div className="label mb-2">24h activity (demo)</div><ResponsiveContainer><AreaChart data={timeline}><Area dataKey="vol" stroke="#22d3ee" fill="#22d3ee" fillOpacity={.2}/></AreaChart></ResponsiveContainer></div>
+<div><div className="label mb-2">Threat alerts</div>{threats.slice(0,4).map(t=><div key={t.id} className="text-sm py-1.5 border-b border-line/60 flex justify-between">{t.type}<span className="text-xs text-muted">{t.conf}%</span></div>)}<div className="mt-3 text-xs text-emerald-400">Evidence chain: verified (simulated)</div></div></div></section>
+<section className="max-w-6xl mx-auto px-6 py-16"><h2 className="text-3xl font-semibold text-center mb-10">One Platform. Multiple Intelligence Layers.</h2>
+<div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{feats.map(([I,t,d,m])=><motion.div key={t} whileHover={{y:-4}} className="card p-5"><I className="text-accent" size={20}/><h3 className="font-medium mt-3">{t}</h3><p className="text-sm text-muted mt-1">{d}</p><div className="label mt-4">{m}</div></motion.div>)}</div></section>
+<section className="max-w-3xl mx-auto px-6 py-16"><h2 className="text-3xl font-semibold text-center mb-10">From Social Signals to Security Intelligence</h2>
+{flow.map((f,i)=><motion.div key={f} initial={{opacity:0,x:-12}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{delay:i*.05}} className="flex items-center gap-4 mb-3"><span className="w-8 h-8 rounded-full border border-accent/40 text-accent text-xs grid place-items-center">{i+1}</span><div className="card px-4 py-2 flex-1 text-sm">{f}</div></motion.div>)}</section>
+<section className="max-w-5xl mx-auto px-6 py-16"><h2 className="text-3xl font-semibold text-center mb-10">Blockchain-backed Evidence</h2>
+<div className="flex flex-wrap justify-center gap-2 label mb-6">{['Content','SHA-256 Hash','Blockchain','Immutable Record','Verification'].map(s=><span key={s} className="card px-3 py-2">{s}</span>)}</div>
+<div className="card p-5 max-w-lg mx-auto text-sm font-mono space-y-1"><div>hash: 0x8f3a...c91e</div><div>network: Polygon testnet (simulated)</div><div>block: #1928374</div><div className="text-emerald-400">verification: VALID</div></div></section>
+<section className="max-w-5xl mx-auto px-6 py-12"><h2 className="text-3xl font-semibold text-center mb-2">Why It Matters</h2><p className="label text-center mb-8">Live Demo Data - not real-world statistics</p>
+<div className="grid grid-cols-2 md:grid-cols-5 gap-3">{stats.map(([v,l])=><div key={l} className="card p-4 text-center"><div className="text-2xl font-semibold text-accent">{v}</div><div className="text-xs text-muted mt-1">{l}</div></div>)}</div></section>
+<section className="text-center py-24"><h2 className="text-3xl sm:text-4xl font-semibold mb-6">Turn Social Signals Into Intelligence.</h2><Link className="btn" to="/dashboard">Launch Intelligence Dashboard</Link></section></div>)}
