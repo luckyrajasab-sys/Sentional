@@ -89,8 +89,10 @@ export default function AppLayout() {
     setSidebarOpen(false)
   }, [location.pathname])
 
+  const isNetwork = location.pathname === '/network'
+
   return (
-    <div className="min-h-screen bg-bg text-slate-100 flex flex-col md:flex-row relative">
+    <div className={`min-h-screen ${isNetwork ? 'bg-slate-50 text-slate-900' : 'bg-bg text-slate-100'} flex flex-col md:flex-row relative`}>
       {/* Mobile Drawer Backdrop */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -99,31 +101,47 @@ export default function AppLayout() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
           />
         )}
       </AnimatePresence>
 
       {/* Sidebar (Desktop Collapsible & Mobile Drawer) */}
       <aside
-        className={`fixed lg:sticky top-0 z-40 h-screen bg-panel border-r border-line flex flex-col transition-all duration-300 ${
+        className={`fixed lg:sticky top-0 z-40 h-screen ${
+          isNetwork
+            ? 'bg-white border-r border-slate-200'
+            : 'bg-panel border-r border-line'
+        } flex flex-col transition-all duration-300 ${
           collapsed ? 'lg:w-[72px]' : 'lg:w-64'
         } w-64 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         {/* Brand Header */}
-        <div className="h-16 border-b border-line px-4 flex items-center justify-between">
+        <div className={`h-16 border-b ${isNetwork ? 'border-slate-200' : 'border-line'} px-4 flex items-center justify-between`}>
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-lg bg-accent/15 border border-accent/40 grid place-items-center text-accent shrink-0 shadow-glow-cyan">
+            <div className={`w-8 h-8 rounded-lg ${
+              isNetwork
+                ? 'bg-blue-50 border border-blue-200 text-blue-600'
+                : 'bg-accent/15 border border-accent/40 text-accent shadow-glow-cyan'
+            } grid place-items-center shrink-0`}>
               <Shield size={18} />
             </div>
             {!collapsed && (
               <div className="min-w-0">
-                <div className="font-bold text-base leading-none text-white tracking-tight flex items-center gap-1.5">
-                  Sentinel <span className="text-[10px] font-mono text-accent uppercase px-1 py-0.2 rounded bg-accent/10 border border-accent/20">SOC</span>
+                <div className={`font-bold text-base leading-none tracking-tight flex items-center gap-1.5 ${
+                  isNetwork ? 'text-slate-900' : 'text-white'
+                }`}>
+                  Sentinel <span className={`text-[10px] font-mono uppercase px-1 py-0.2 rounded border ${
+                    isNetwork
+                      ? 'text-blue-700 bg-blue-50 border-blue-200'
+                      : 'text-accent bg-accent/10 border-accent/20'
+                  }`}>SOC</span>
                 </div>
-                <div className="text-[10px] text-muted font-medium tracking-wider mt-0.5 truncate">
+                <div className={`text-[10px] font-medium tracking-wider mt-0.5 truncate ${
+                  isNetwork ? 'text-slate-500' : 'text-muted'
+                }`}>
                   Social Intel & Blockchain
                 </div>
               </div>
@@ -134,7 +152,9 @@ export default function AppLayout() {
           <button
             type="button"
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-1.5 text-muted hover:text-white rounded"
+            className={`lg:hidden p-1.5 rounded ${
+              isNetwork ? 'text-slate-500 hover:text-slate-900 hover:bg-slate-100' : 'text-muted hover:text-white'
+            }`}
             aria-label="Close sidebar"
           >
             <X size={18} />
@@ -146,7 +166,9 @@ export default function AppLayout() {
           {navSections.map(sec => (
             <div key={sec.title}>
               {!collapsed && (
-                <div className="px-2 mb-2 text-[10px] uppercase font-bold tracking-wider text-muted/70">
+                <div className={`px-2 mb-2 text-[10px] uppercase font-bold tracking-wider ${
+                  isNetwork ? 'text-slate-400' : 'text-muted/70'
+                }`}>
                   {sec.title}
                 </div>
               )}
@@ -161,17 +183,29 @@ export default function AppLayout() {
                       className={({ isActive }) =>
                         `flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all group relative ${
                           isActive
-                            ? 'bg-accent/15 text-white border border-accent/40 shadow-glow-cyan'
-                            : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent'
+                            ? isNetwork
+                              ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-sm font-semibold'
+                              : 'bg-accent/15 text-white border border-accent/40 shadow-glow-cyan'
+                            : isNetwork
+                              ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent'
+                              : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent'
                         }`
                       }
                     >
-                      <Icon size={16} className="shrink-0 text-muted group-hover:text-accent transition-colors" />
+                      <Icon size={16} className={`shrink-0 transition-colors ${
+                        isNetwork
+                          ? 'text-slate-400 group-hover:text-blue-600'
+                          : 'text-muted group-hover:text-accent'
+                      }`} />
                       {!collapsed && (
                         <div className="flex-1 flex items-center justify-between min-w-0">
                           <span className="truncate">{item.label}</span>
                           {item.badge && (
-                            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-line-light/60 text-muted group-hover:text-accent border border-line">
+                            <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded border ${
+                              isNetwork
+                                ? 'bg-slate-100 text-slate-600 border-slate-200'
+                                : 'bg-line-light/60 text-muted group-hover:text-accent border border-line'
+                            }`}>
                               {item.badge}
                             </span>
                           )}
@@ -186,16 +220,18 @@ export default function AppLayout() {
         </nav>
 
         {/* Sidebar Footer with Collapse Toggle & Tour launcher */}
-        <div className="p-3 border-t border-line space-y-2 bg-panel-light/30">
+        <div className={`p-3 border-t space-y-2 ${isNetwork ? 'border-slate-200 bg-slate-50/50' : 'border-line bg-panel-light/30'}`}>
           <button
             type="button"
             onClick={() => startTour()}
-            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-accent hover:bg-white/5 border border-line transition-colors ${
-              collapsed ? 'justify-center' : ''
-            }`}
+            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors border ${
+              isNetwork
+                ? 'text-slate-700 hover:text-blue-700 hover:bg-white border-slate-200'
+                : 'text-slate-300 hover:text-accent hover:bg-white/5 border-line'
+            } ${collapsed ? 'justify-center' : ''}`}
             title="Start First-Run Tour"
           >
-            <Sparkles size={15} className="text-accent shrink-0" />
+            <Sparkles size={15} className={`${isNetwork ? 'text-blue-600' : 'text-accent'} shrink-0`} />
             {!collapsed && <span>Guided Tour</span>}
           </button>
 
@@ -203,10 +239,14 @@ export default function AppLayout() {
           <button
             type="button"
             onClick={() => setCollapsed(c => !c)}
-            className="hidden lg:flex w-full items-center justify-center p-1.5 rounded-lg text-muted hover:text-white hover:bg-white/5 transition-colors border border-transparent hover:border-line"
+            className={`hidden lg:flex w-full items-center justify-center p-1.5 rounded-lg transition-colors border border-transparent ${
+              isNetwork
+                ? 'text-slate-400 hover:text-slate-800 hover:bg-slate-100 hover:border-slate-200'
+                : 'text-muted hover:text-white hover:bg-white/5 hover:border-line'
+            }`}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            {collapsed ? <ChevronRight size={16} /> : <div className="flex items-center gap-2 text-[11px] text-muted"><ChevronLeft size={14} /> Collapse Sidebar</div>}
+            {collapsed ? <ChevronRight size={16} /> : <div className={`flex items-center gap-2 text-[11px] ${isNetwork ? 'text-slate-500' : 'text-muted'}`}><ChevronLeft size={14} /> Collapse Sidebar</div>}
           </button>
         </div>
       </aside>
@@ -214,13 +254,21 @@ export default function AppLayout() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header Bar */}
-        <header className="sticky top-0 z-30 h-16 bg-bg/90 backdrop-blur-md border-b border-line px-4 sm:px-6 flex items-center justify-between gap-4">
+        <header className={`sticky top-0 z-30 h-16 border-b px-4 sm:px-6 flex items-center justify-between gap-4 ${
+          isNetwork
+            ? 'bg-white/95 backdrop-blur-md border-slate-200'
+            : 'bg-bg/90 backdrop-blur-md border-line'
+        }`}>
           <div className="flex items-center gap-3 min-w-0">
             {/* Mobile menu trigger */}
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 text-muted hover:text-white rounded-lg border border-line bg-panel"
+              className={`lg:hidden p-2 rounded-lg border ${
+                isNetwork
+                  ? 'border-slate-200 bg-white text-slate-600 hover:text-slate-900'
+                  : 'border-line bg-panel text-muted hover:text-white'
+              }`}
               aria-label="Open navigation menu"
             >
               <Menu size={18} />
@@ -235,14 +283,20 @@ export default function AppLayout() {
             <button
               type="button"
               onClick={() => setCmdOpen(true)}
-              className="w-full flex items-center justify-between gap-2 bg-panel border border-line hover:border-line-light rounded-lg px-3.5 py-1.5 text-xs text-muted hover:text-slate-200 transition-colors shadow-inner"
+              className={`w-full flex items-center justify-between gap-2 border rounded-lg px-3.5 py-1.5 text-xs transition-colors shadow-sm ${
+                isNetwork
+                  ? 'bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-900'
+                  : 'bg-panel border-line hover:border-line-light text-muted hover:text-slate-200 shadow-inner'
+              }`}
               aria-label="Search or type command"
             >
               <div className="flex items-center gap-2 truncate">
-                <Search size={14} className="text-accent shrink-0" />
+                <Search size={14} className={`${isNetwork ? 'text-blue-600' : 'text-accent'} shrink-0`} />
                 <span className="truncate">Search accounts, threats, pages, hashes...</span>
               </div>
-              <kbd className="hidden lg:inline-flex text-[10px] font-mono border border-line-light rounded px-1.5 py-0.5 bg-bg text-muted shrink-0">
+              <kbd className={`hidden lg:inline-flex text-[10px] font-mono border rounded px-1.5 py-0.5 shrink-0 ${
+                isNetwork ? 'border-slate-200 bg-white text-slate-500' : 'border-line-light bg-bg text-muted'
+              }`}>
                 Ctrl K
               </kbd>
             </button>
@@ -251,17 +305,25 @@ export default function AppLayout() {
           {/* Right Action Icons: Operational status, Notifications, Role menu */}
           <div className="flex items-center gap-2.5 shrink-0">
             {/* Live Operational Status */}
-            <div className="hidden xl:flex items-center gap-1.5 text-xs text-muted font-mono px-2.5 py-1 rounded-full border border-line bg-panel">
-              <Radio size={12} className="text-emerald-400 animate-pulse" />
-              <span className="text-emerald-400 font-semibold">SOC ONLINE</span>
-              <span className="text-muted/60">• Polygon #1928374</span>
+            <div className={`hidden xl:flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded-full border ${
+              isNetwork
+                ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                : 'border-line bg-panel text-muted'
+            }`}>
+              <Radio size={12} className="text-emerald-500 animate-pulse" />
+              <span className="text-emerald-700 font-semibold">SOC ONLINE</span>
+              <span className={isNetwork ? 'text-slate-500' : 'text-muted/60'}>• Polygon #1928374</span>
             </div>
 
             {/* Mobile search icon button */}
             <button
               type="button"
               onClick={() => setCmdOpen(true)}
-              className="sm:hidden p-2 rounded-lg border border-line bg-panel text-muted hover:text-white"
+              className={`sm:hidden p-2 rounded-lg border ${
+                isNetwork
+                  ? 'border-slate-200 bg-white text-slate-600 hover:text-slate-900'
+                  : 'border-line bg-panel text-muted hover:text-white'
+              }`}
               aria-label="Search"
             >
               <Search size={17} />
@@ -276,7 +338,7 @@ export default function AppLayout() {
         </header>
 
         {/* Page Content Body */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1800px] w-full mx-auto min-w-0">
+        <main className={`flex-1 p-4 sm:p-6 lg:p-8 max-w-[1800px] w-full mx-auto min-w-0 ${isNetwork ? 'bg-slate-50' : ''}`}>
           <Outlet />
         </main>
       </div>
